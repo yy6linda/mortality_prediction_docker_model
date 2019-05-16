@@ -1,13 +1,13 @@
 
-This is an instruction for building mortality prediction docker models for EHR DREAM Challenge. In this repository, a dockerised mortality prediction baseline model is used as an example and we will also provide instructions on how challenge participants can build up their own dockerised mortality prediction models.
+This is an instruction to build mortality prediction docker models for EHR DREAM Challenge. In this repository, a dockerised baseline model for mortality prediction is used as an example and we will also provide instructions on how challenge participants can dockerise their own mortality prediction models.
 # An example: a dockerised baseline model
-This repository contains the code for building a baseline mortality prediction model which only uses patients' demographic information: age on cut-off date(July 5th 2017), gender and race.
+This repository contains the codes for building a baseline mortality prediction model which only utilizes patients' demographic information: age on cut-off date(July 5th 2017), gender and race.
 
-To begin, clone the mortality_prediction_docker_model repository. Download omop synpuf data([Learn more about omop synpuf data](https://www.synapse.org/#!Synapse:syn18405992/wiki/589659)). Within the repository, create two folders called, "train" where the omop synpuf train dataset will live; "infer" where the omop synpuf infer dataset will live.
+To begin, clone the mortality_prediction_docker_model repository. Download omop synpuf data([Learn more about omop synpuf data](https://www.synapse.org/#!Synapse:syn18405992/wiki/589659)). Within the repository, create folders called, "train" where the omop synpuf train dataset will live; "infer" where the omop synpuf infer dataset will live; "scratch" where participants can store intermediate files; "model" where the model files will live; "output" where the final predictions will live.
 
-Change directory to "app" folder. Build a docker image basing on the dockerfile.
+Build a docker image basing on the dockerfile.
 ```
-docker build -t baseline_model:v0.1  .
+docker build -t baseline_model:v0.1  <path to the dockerfile>
 
 ```
 Run the train image
@@ -44,7 +44,7 @@ python /app/train.py
 A docker container is built basing on the docker images submitted by participants. The illustration below shows the inside structure of a docker container.
 ![docker container structure](./pics/docker_container_structure.png)
 
-"app" directory is created by participants in which scripts for building prediction models (train.py), generating predictions (infer.py) and bashfiles to run those scripts (train.sh and infer.sh) lie. Information to build "app" directory is in the dockerfile.
+"app" directory is created by participants in which scripts for building prediction models (train.py), generating predictions (infer.py) and bashfiles to run those scripts (train.sh and infer.sh) live. Information to build "app" directory is in the dockerfile.
 
 Other directories ("train","infer","scratch","model","output") will be mounted to the docker container by Synapse later. Participants don't need to create those directories but need to know the location of different directories in the container to access and store data.
 
@@ -59,7 +59,7 @@ df = pd.read_csv("/omop/train/person.csv")
 
 "model" directory is used to store the model.
 
-"output" directory is used to store the prediction generated for the "infer" omop data.
+"output" directory is used to store the prediction generated from the "infer" omop data.
 
 
 ## create a dockerfile
@@ -67,19 +67,19 @@ df = pd.read_csv("/omop/train/person.csv")
 A dockerfile is required to build a docker image. A template for dockerfile is provided in this repo.
 
 
-*specify environment*
+*Specify environment*
 ```dockerfile
 FROM python:3.5
 ```
 
-*specify packages required for running the model*
+*Specify packages required for running the model*
 ```
 RUN pip install pandas
 RUN pip install numpy
 RUN pip install sklearn
 ```
 
-*make a directory called "app" and copy scripts and bash files for running scripts to this "app" directory*
+*Make a directory called "app" and copy scripts and bash files for running scripts to this "app" directory*
 ```
 RUN mkdir app
 COPY ./train.py /app/
@@ -96,7 +96,7 @@ RUN chmod +X /app/infer.sh
 ## Create a docker image
 Put dockerfile, train.sh, train.py, infer.sh, infer.py in the same direcotory and run the command below:
 ```
-docker build -t  docker.synapse.org/syn12345/my-repo path/to/dockerfile
+docker build -t  docker.synapse.org/syn12345/my-repo <path to the dockerfile>
 ```
 [Learn more about building docker images](https://docs.docker.com/get-started/)
 ## Submission to synapse platform
