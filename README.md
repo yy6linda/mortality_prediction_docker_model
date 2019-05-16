@@ -1,5 +1,5 @@
 
-This is an instruction to build mortality prediction docker models for EHR DREAM Challenge. In this repository, a dockerised baseline model for mortality prediction is used as an example and we will also provide instructions on how challenge participants can dockerise their own mortality prediction models.
+This is an instruction to build mortality prediction docker models for EHR DREAM Challenge. In this repository, a dockerized baseline model for mortality prediction is used as an example and we will also provide instructions for challenge participants to dockerize their mortality prediction models.
 # An example: a dockerised baseline model
 This repository contains the codes for building a baseline mortality prediction model which only utilizes patients' demographic information: age on cut-off date(July 5th 2017), gender and race.
 
@@ -62,7 +62,7 @@ df = pd.read_csv("/omop/train/person.csv")
 "output" directory is used to store the prediction generated from the "infer" omop data.
 
 
-## create a dockerfile
+## Create a dockerfile
 
 A dockerfile is required to build a docker image. A template for dockerfile is provided in this repo.
 
@@ -88,7 +88,7 @@ COPY ./train.sh /app/
 COPY ./infer.sh /app/
 ```
 
-*set commmands for running bashfiles*
+*Set commmands for running bashfiles*
 ```
 RUN chmod +X /app/train.sh
 RUN chmod +X /app/infer.sh
