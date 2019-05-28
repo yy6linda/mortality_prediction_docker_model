@@ -1,7 +1,31 @@
+# EHR DREAM Challenge: Baseline Model
+## Overview
+This repository describes how to build and run locally the
+baseline model of the [EHR DREAM Challenge: Patient Mortality Prediction](https://www.synapse.org/#!Synapse:syn18404605). The goal of this [DREAM Challenge](http://dreamchallenges.org/) is to develop models that take as input the electronic health records (EHRs) of a subject and outputs the probability that this subject will die within 6 months after the date of the last EHR.
 
-This is an instruction to build mortality prediction docker models for EHR DREAM Challenge. In this repository, a dockerized baseline model for mortality prediction is used as an example and we will also provide instructions for challenge participants to dockerize their mortality prediction models.
-# An example: a dockerised baseline model
+## Description of the model
+This baseline model uses only the age (at the time of the ), gender and race of the subject
+
+
 This repository contains the codes for building a baseline mortality prediction model which only utilizes patients' demographic information: age on cut-off date(July 5th 2017), gender and race.
+
+
+## Build the baseline model as a Docker image
+
+1. Clone this GitHub repository
+2. `docker build -t ehr-baseline-model example/app`
+
+## Run the baseline model locally on synthetic data
+### Create the required folders
+
+
+### Install Synpuf dataset
+For this example, ..
+
+1. Download the Synpuf data
+
+
+
 
 To begin, clone the mortality_prediction_docker_model repository. Download omop synpuf data([Learn more about omop synpuf data](https://www.synapse.org/#!Synapse:syn18405992/wiki/589659)). Within the repository, create folders called, "train" where the omop synpuf train dataset will live; "infer" where the omop synpuf infer dataset will live; "scratch" where participants can store intermediate files; "model" where the model files will live; "output" where the final predictions will live.
 
@@ -25,6 +49,8 @@ docker run -v<path to infer folder>:/infer:ro
 baseline_model:v0.1 bash "/app/infer.sh"
 ```
 If the docker model runs successfully, an "output.csv" file will be created in the output folder, which has two columns: one for person_id, the other for the 6-month mortality probability.
+
+
 # Build your own docker model  
 ## Preparation
 We suggest EHR DREAM challenge participants to prepare two scripts: train.py and infer.py.
@@ -62,37 +88,7 @@ df = pd.read_csv("/omop/train/person.csv")
 "output" directory is used to store the prediction generated from the "infer" omop data.
 
 
-## Create a dockerfile
 
-A dockerfile is required to build a docker image. A template for dockerfile is provided in this repo.
-
-
-*Specify environment*
-```dockerfile
-FROM python:3.5
-```
-
-*Specify packages required for running the model*
-```
-RUN pip install pandas
-RUN pip install numpy
-RUN pip install sklearn
-```
-
-*Make a directory called "app" and copy scripts and bash files for running scripts to this "app" directory*
-```
-RUN mkdir app
-COPY ./train.py /app/
-COPY ./infer.py /app/
-COPY ./train.sh /app/
-COPY ./infer.sh /app/
-```
-
-*Set commmands for running bashfiles*
-```
-RUN chmod +X /app/train.sh
-RUN chmod +X /app/infer.sh
-```
 ## Create a docker image
 Put dockerfile, train.sh, train.py, infer.sh, infer.py in the same direcotory and run the command below:
 ```
