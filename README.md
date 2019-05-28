@@ -1,57 +1,69 @@
 # EHR DREAM Challenge: Baseline Model
 ## Overview
 This repository describes how to build and run locally the
-baseline model of the [EHR DREAM Challenge: Patient Mortality Prediction](https://www.synapse.org/#!Synapse:syn18404605). The goal of this [DREAM Challenge](http://dreamchallenges.org/) is to develop models that take as input the electronic health records (EHRs) of a subject and outputs the probability that this subject will die within 6 months after the date of the last EHR.
+baseline model of the [EHR DREAM Challenge: Patient Mortality Prediction](https://www.synapse.org/#!Synapse:syn18404605). The goal of this [DREAM Challenge](http://dreamchallenges.org/) is to develop models that take as input the electronic health records (EHRs) of a patient and outputs the probability that this patient will die within 6 months after a given Prediction Date (PD).
 
 ## Description of the model
-This baseline model uses only the age (at the time of the ), gender and race of the subject
+This naive model uses a logistic regression approach to predict whether the patient will die in the next DeltaT days after the Prediction Date (PD). The model only uses three features from the demographic data: the age (on the PD), gender and ethnicity of the patient.
 
-
-This repository contains the codes for building a baseline mortality prediction model which only utilizes patients' demographic information: age on cut-off date(July 5th 2017), gender and race.
-
-
-## Build the baseline model as a Docker image
+## Dockerize the model
 
 1. Clone this GitHub repository
-2. `docker build -t ehr-baseline-model example/app`
+2. `docker build -t ehr-mortality-baseline-model example/app`
 
 ## Run the baseline model locally on synthetic data
-### Create the required folders
+This section describes how to train and evaluate the performance of the model locally, that is, without using the IT infrastructure of the [EHR DREAM Challenge: Patient Mortality Prediction](https://www.synapse.org/#!Synapse:syn18404605).
 
+### Description of the data
+TODO: Provide a description of the Synpuf data: number of total/positive/negative subjects, date of the first and last record, who and how generated the data, highlight that the data can not be used for meaningful evaluation of the performance of the models,
 
-### Install Synpuf dataset
-For this example, ..
+[Learn more about OMOP Synpuf data](https://www.synapse.org/#!Synapse:syn18405992/wiki/589659)
 
-1. Download the Synpuf data
+### Download the data
+The Synpuf data are available here (TODO: add link). After downloading them, uncompress the archive and place the data folder where it can later be accessed by the dockerized model (see below).
 
-
-
-
-To begin, clone the mortality_prediction_docker_model repository. Download omop synpuf data([Learn more about omop synpuf data](https://www.synapse.org/#!Synapse:syn18405992/wiki/589659)). Within the repository, create folders called, "train" where the omop synpuf train dataset will live; "infer" where the omop synpuf infer dataset will live; "scratch" where participants can store intermediate files; "model" where the model files will live; "output" where the final predictions will live.
-
-Build a docker image basing on the dockerfile.
-```
-docker build -t baseline_model:v0.1  <path to the dockerfile>
+### Train the model
+Once the baseline model has been dockerized (see above), run the following command to train the model on Synpuf data:
 
 ```
-Run the train image
+docker run -v <path to train folder>:/train:ro
+-v <path to scratch folder>:/scratch:rw
+-v <path to model folder>:/model:rw  ehr-mortality-baseline-model bash /app/train.sh
 ```
-docker run -v<path to train folder>:/train:ro
--v<path to scratch folder>:/scratch:rw
--v<path to model folder>:/model:rw  baseline_model:v0.1 bash "/app/train.sh"
-```
-Run infer image
-```
-docker run -v<path to infer folder>:/infer:ro
--v<path to scratch folder>:/scratch:rw
--v<path to output folder>:/output:rw
--v<path to model folder>:/model:rw
-baseline_model:v0.1 bash "/app/infer.sh"
-```
-If the docker model runs successfully, an "output.csv" file will be created in the output folder, which has two columns: one for person_id, the other for the 6-month mortality probability.
+
+where
+
+- `<path to train folder>` is the absolute path to the training data (e.g. `/home/charlie/ehr_experiment/synpuf_data/train`).
+- `<path to scratch folder>` is the absolute path to the scratch folder (e.g. `/home/charlie/ehr_experiment/scratch`).
+- `<path to model folder>` is the absolute path to where the trained model will be exported (e.g. `/home/charlie/ehr_experiment/model`))
+
+### Predict the mortality status of patients
+
+Run the following command to generate mortality status predictions for a group of XXX patients whose data are stored in the folder `synpuf/infer`.
 
 
-# Build your own docker model  
+```
+docker run -v <path to infer folder>:/infer:ro
+-v <path to scratch folder>:/scratch:rw
+-v <path to output folder>:/output:rw
+-v <path to model folder>:/model:rw
+ehr-mortality-baseline-model bash /app/infer.sh
+```
+
+where
+
+- `<path to infer folder>` is the absolute path to the inference data (e.g. `/home/charlie/ehr_experiment/synpuf_data/infer`).
+- `<path to output folder>` is the absolute path to where the prediction file will be saved.
+
+If the docker model runs successfully, the prediction file `output.csv` file will be created in the output folder. This file has two columns: 1) person_id and 2) 6-month mortality probability.
+
+
+## Build your own docker model  
+TODO
+
+
+
+
 ## Preparation
 We suggest EHR DREAM challenge participants to prepare two scripts: train.py and infer.py.
 train.py is for building a prediction model and infer.py is for generating predictions using the model; two bashfiles: train.sh and infer.sh for running train.py and infer.py.
