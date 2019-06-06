@@ -1,25 +1,28 @@
 FROM python:3.5
-RUN pip install pandas
-RUN pip install numpy
-RUN pip install sklearn
-RUN pip install matplotlib
-RUN pip install datetime
-RUN pip install xgboost
-RUN pip install keras
-RUN pip install tensorflow
-RUN pip install eli5
-RUN pip install joblib
 
-RUN mkdir app	
+# Install dependencies
+RUN pip install pandas \
+  numpy \
+  sklearn \
+  matplotlib \
+  datetime \
+  xgboost \
+  keras \
+  tensorflow \
+  eli5 \
+  joblib
 
+# Move to the app folder
+RUN mkdir /app
+WORKDIR /app
 
-COPY ./train.py /app/
-COPY ./infer.py /app/
+# Copy our python program for training and inference
+COPY ./train.py .
+COPY ./infer.py .
 
-COPY ./train.sh /app/
-COPY ./infer.sh /app/
+# Copy Bash scripts expected by the IT infrastructure of the EHR DREAM Challenge
+COPY ./train.sh .
+COPY ./infer.sh .
 
-
-
-RUN chmod +X /app/train.sh
-
+# Add executable permission to Bash scripts
+RUN chmod +x train.sh infer.sh
