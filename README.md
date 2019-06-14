@@ -80,7 +80,9 @@ python /app/train.py
 ## Docker container structure
 
 A docker container is built basing on the docker images submitted by participants. The illustration below shows the inside structure of a docker container.
+
 ![docker container structure](./pics/docker_container_structure.png)
+
 
 "app" directory is created by participants in which scripts for building prediction models (train.py), generating predictions (infer.py) and bashfiles to run those scripts (train.sh and infer.sh) live. Information to build "app" directory is in the dockerfile.
 
