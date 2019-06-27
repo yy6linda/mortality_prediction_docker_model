@@ -26,15 +26,26 @@ class OmopParser(object):
     def __init__(self):
         self.name = 'omop_assembler'
 
-
     def add_demographic_data(self):
+        '''find the last visit date for all patients in the inference set'''
+        visit=pd.read_csv('/infer/visit_occurrence.csv')
+        lst =[]
+        visit_id = visit[['person_id']].drop_duplicates(keep='first')
+        for id in visit_id.person_id:
+            individual_visit = visit.loc[visit['person_id']==id]
+            individual_visit =individual_visit.sort_values(by ='visit_start_date',ascending=False)
+            lst.append([id,individual_visit.iloc[0,1]])
+        cols=['person_id','last_visit_date']
+        person_last_visit = pd.DataFrame(lst, columns=cols)
+
         '''add demographic data'''
         person = pd.read_csv('/infer/person.csv')
         cols = ['person_id','gender_concept_id','year_of_birth','race_source_value']
         person = person[cols]
-        person['cut_off_date'] = datetime(2017, 7, 5)
+        person = pd.merge(person_last_visit, person,on=['person_id'], how='inner')
         person['year_of_birth'] = pd.to_datetime(person['year_of_birth'], format='%Y')
-        person['age'] = person['cut_off_date'] - person['year_of_birth']
+        person['last_visit_date'] = pd.to_datetime(person['last_visit_date'], format='%Y-%m-%d')
+        person['age'] = person['last_visit_date'] - person['year_of_birth']
         person['age'] = person['age'].apply(lambda x: round(x.days/365.25))
         dummy_columns_gender = pd.get_dummies(person['gender_concept_id'],prefix='gender',drop_first=True)
         ##scaling the age
@@ -42,13 +53,14 @@ class OmopParser(object):
         scaler = MinMaxScaler()
         scaled_column = scaler.fit_transform(person[['age']])
         person = pd.concat([person, pd.DataFrame(scaled_column,columns=['scaled_age'])],axis=1)
-        dummy_columns_race = pd.get_dummies(person['race_source_value'],prefix='race',drop_first=True)
+        dummy_columns_gender = pd.get_dummies(person['gender_concept_id']).rename(columns=lambda x: 'gender_' + str(x))
+        dummy_columns_gender = dummy_columns_gender[['gender_8532']]
+        dummy_columns_race = pd.get_dummies(person['race_source_value']).rename(columns=lambda x: 'race_' + str(x))
+        dummy_columns_race = dummy_columns_race[['race_1','race_2','race_3']]
         person = person[['person_id','scaled_age']]
         person = person.join(dummy_columns_race)
         person = person.join(dummy_columns_gender)
         person.to_csv( '/scratch/demographic_data_infer.csv',index=False)
-
-
 
     def logit_model(self,filename):
         data = pd.read_csv(filename)
@@ -60,10 +72,7 @@ class OmopParser(object):
         person_id = data.person_id
         output = pd.DataFrame(Y_pred,columns=['confidence'])
         output_prob = pd.concat([person_id,output],axis=1)
-        output_prob.to_csv('/output/predictions.csv')
-
-
-
+        output_prob.to_csv('/output/predictions.csv', index = False)
 
 
 if __name__ == '__main__':
