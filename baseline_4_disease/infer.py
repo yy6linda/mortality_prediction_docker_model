@@ -31,7 +31,7 @@ ROOT="/"
 
 
 class OmopParser(object):
-    '''this structures the omop dataset'''
+    '''this structures the omop dataset and extracting information from the original dataset'''
     def __init__(self):
         self.name = 'omop_parser'
 
