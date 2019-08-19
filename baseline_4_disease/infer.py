@@ -29,7 +29,6 @@ from joblib import load
 
 ROOT="/"
 
-
 class OmopParser(object):
     '''this structures the omop dataset and extracting information from the original dataset'''
     def __init__(self):
