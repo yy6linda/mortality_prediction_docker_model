@@ -15,12 +15,10 @@ This naive model uses a logistic regression approach to predict whether the pati
 This section describes how to train and evaluate the performance of the model locally, that is, without using the IT infrastructure of the [EHR DREAM Challenge: Patient Mortality Prediction](https://www.synapse.org/#!Synapse:syn18404605).
 
 ### Description of the data
-TODO: Provide a description of the Synpuf data: number of total/positive/negative subjects, date of the first and last record, who and how generated the data, highlight that the data can not be used for meaningful evaluation of the performance of the models,
-
-[Learn more about OMOP Synpuf data](https://www.synapse.org/#!Synapse:syn18405992/wiki/589659)
+[Learn more about OMOP Synpuf data](https://www.synapse.org/#!Synapse:syn18405992/wiki/594233)
 
 ### Download the data
-The Synpuf data are available here (TODO: add link). After downloading them, uncompress the archive and place the data folder where it can later be accessed by the dockerized model (see below).
+[The Synpuf data are available here] (https://www.synapse.org/#!Synapse:syn20685954). After downloading them, uncompress the archive and place the data folder where it can later be accessed by the dockerized model (see below).
 
 ### Train the model
 Once the baseline model has been dockerized (see above), run the following command to train the model on Synpuf data:
@@ -59,9 +57,6 @@ If the docker model runs successfully, the prediction file `output.csv` file wil
 
 
 ## Build your own docker model  
-TODO
-
-
 
 
 ## Preparation
