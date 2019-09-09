@@ -18,7 +18,7 @@ This section describes how to train and evaluate the performance of the model lo
 [Learn more about OMOP Synpuf data](https://www.synapse.org/#!Synapse:syn18405992/wiki/594233)
 
 ### Download the data
-[The Synpuf data are available here] (https://www.synapse.org/#!Synapse:syn20685954). After downloading them, uncompress the archive and place the data folder where it can later be accessed by the dockerized model (see below).
+[The Synpuf data are available here](https://www.synapse.org/#!Synapse:syn20685954). After downloading them, uncompress the archive and place the data folder where it can later be accessed by the dockerized model (see below).
 
 ### Train the model
 Once the baseline model has been dockerized (see above), run the following command to train the model on Synpuf data:
