@@ -53,7 +53,7 @@ where
 - `<path to infer folder>` is the absolute path to the inference data (e.g. `/home/charlie/ehr_experiment/synpuf_data/infer`).
 - `<path to output folder>` is the absolute path to where the prediction file will be saved.
 
-If the docker model runs successfully, the prediction file `output.csv` file will be created in the output folder. This file has two columns: 1) person_id and 2) 6-month mortality probability.
+If the docker model runs successfully, the prediction file `predictions.csv` file will be created in the output folder. This file has two columns: 1) person_id and 2) 6-month mortality probability. Note: make sure the column 2) contains no NA and the values are between 0 and 1.
 
 
 ## Build your own docker model  
