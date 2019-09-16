@@ -70,7 +70,7 @@ class OmopParser(object):
         clf =  load('/model/baseline.joblib')
         Y_pred = clf.predict_proba(X)[:,1]
         person_id = data.person_id
-        output = pd.DataFrame(Y_pred,columns=['confidence'])
+        output = pd.DataFrame(Y_pred,columns=['score'])
         output_prob = pd.concat([person_id,output],axis=1)
         output_prob.to_csv('/output/predictions.csv', index = False)
 
