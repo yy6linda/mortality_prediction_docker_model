@@ -5,7 +5,8 @@ RUN pip install pandas \
   numpy \
   sklearn \
   datetime \
-  joblib
+  joblib \
+  matplotlib 
 
 # Move to the app folder
 RUN mkdir /app
