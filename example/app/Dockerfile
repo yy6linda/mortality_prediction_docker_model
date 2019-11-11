@@ -4,9 +4,13 @@ FROM python:3.5
 RUN pip install pandas \
   numpy \
   sklearn \
+  matplotlib \
   datetime \
-  joblib \
-  matplotlib 
+  xgboost \
+  keras \
+  tensorflow \
+  eli5 \
+  joblib
 
 # Move to the app folder
 RUN mkdir /app
