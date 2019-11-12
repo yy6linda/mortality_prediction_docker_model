@@ -55,7 +55,7 @@ class OmopParser(object):
         person = person.merge(race, how = "left", on = ['person_id'])
         person.fillna(0, inplace = True)
         person.to_csv( '/scratch/demographic_data_infer.csv',index = False)
-
+        print("Age, gender and race information is collected for patients in the inference dataset", flush = True)
 
     def logit_model(self,filename):
         '''apply trained logistic regression model on the inferring dataset'''
@@ -71,6 +71,7 @@ class OmopParser(object):
         output_prob = pd.concat([person_id,output],axis = 1)
         output_prob.columns = ["person_id", "score"]
         output_prob.to_csv('/output/predictions.csv', index = False)
+        print("Inferring stage finished", flush = True)
 
 if __name__ == '__main__':
     FOLDER ='scratch/'

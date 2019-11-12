@@ -49,6 +49,7 @@ class OmopParser(object):
         visit_live['death'] = np.zeros(visit_live.shape[0])
         prediction_date = pd.concat([visit_death,visit_live],axis=0)
         prediction_date.to_csv(file_name[0:-4] + '_prediction_date.csv',index=False)
+        print("last visit date selected", flush = True)
 
     def add_demographic_data(self,file_name):
         '''add demographic data including age, gender and race'''
@@ -61,6 +62,7 @@ class OmopParser(object):
         person_prediction_date['year_of_birth'] = pd.to_datetime(person_prediction_date['year_of_birth'], format='%Y')
         person_prediction_date['age'] = person_prediction_date['prediction_date'] - person_prediction_date['year_of_birth']
         person_prediction_date['age'] = person_prediction_date['age'].apply(lambda x: x.days/365.25)
+        print("patients' ages are calculated", flush = True)
         person["count"] = 1
         gender = person.pivot(index = "person_id", columns="gender_concept_id", values="count")
         gender.reset_index(inplace = True)
@@ -70,6 +72,7 @@ class OmopParser(object):
         race.fillna(0,inplace = True)
         race = race[['person_id', 8516, 8515, 8527, 8557, 8657]]
         gender = gender[['person_id',8532]]
+        print("patients' gender and race information are added", flush = True)
         scaler = MinMaxScaler(feature_range = (0, 1), copy = True)
         scaled_column = scaler.fit_transform(person_prediction_date[['age']])
         person_prediction_date = pd.concat([person_prediction_date, pd.DataFrame(scaled_column,columns = ['scaled_age'])],axis=1)
@@ -92,6 +95,7 @@ class OmopParser(object):
         clf = LogisticRegressionCV(cv = 20, penalty = 'l2', tol = 0.0001, fit_intercept = True, intercept_scaling = 1, class_weight = None, random_state = None,
         max_iter = 100, verbose = 0, n_jobs = None).fit(X,Y)
         dump(clf, '/model/baseline.joblib')
+        print("Training stage finished", flush = True)
 
 if __name__ == '__main__':
     FOLDER = 'scratch/'
